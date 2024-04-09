@@ -26,11 +26,11 @@ jobs:
     - name: Build and push mysql image to Amazon ECR
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: assigment-dev-mysql
+        ECR_REPOSITORY: project-mysql
         IMAGE_TAG: v1.0
       run: |
         
-        cd dockerfile
+        cd docker
         # Docker build for MySQL image
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile_mysql .
         # Docker push to ECR
@@ -39,7 +39,7 @@ jobs:
     - name: Build, tag, and push app image to Amazon ECR
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: assignment-dev-app
+        ECR_REPOSITORY: project-app
         IMAGE_TAG: v1.2
         DBHOST: ${{ secrets.DBHOST }}
         DBPORT: ${{ secrets.DBPORT }}
@@ -48,7 +48,7 @@ jobs:
         BACKGROUND_IMAGE: 'https://finalbrojectmoishtor.s3.amazonaws.com/wallpaperflare.com_wallpaper.jpg'
       run: |
         
-        cd dockerfile
+        cd docker
         # Docker build for app image
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile \
           --build-arg DBHOST=$DBHOST \
