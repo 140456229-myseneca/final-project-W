@@ -31,8 +31,13 @@ jobs:
       run: |
         
         cd docker
-        # Docker build for MySQL images
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile_mysql .
+        # Docker build
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY_DB:$IMAGE_TAG_DB -f Dockerfile_mysql . 
+        
+        # Unit test
+        docker run -d --name mysql -e MYSQL_ROOT_PASSWORD=pw -d $ECR_REGISTRY/$ECR_REPOSITORY_DB:$IMAGE_TAG_DB
+        docker ps
+
         # Docker push to ECR
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         
@@ -56,5 +61,18 @@ jobs:
           --build-arg DBUSER=$DBUSER \
           --build-arg DBPWD=$DBPWD \
           --build-arg BACKGROUND_IMAGE=$BACKGROUND_IMAGE .
+
+    - name: Run container for testing
+      run: |
+        docker run -d -p 8080:8080 \
+          -e DBHOST=${{ secrets.DBHOST }} \
+          -e DBPORT=${{ secrets.DBPORT }} \
+          -e DBUSER=${{ secrets.DBUSER }} \
+          -e DBPWD=${{ secrets.DBPWD }} \
+          -e BACKGROUND_IMAGE='https://project-s3-g4.s3.amazonaws.com/PJpicture.jpg' \
+          --name my_app $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        # Replace the following line with your actual test commands
+        echo "Run your tests here. Use curl or other tools to interact with your app."
+
         # Docker push to ECR
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
