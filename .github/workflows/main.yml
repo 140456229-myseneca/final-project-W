@@ -31,7 +31,7 @@ jobs:
       run: |
         
         cd docker
-        # Docker build for MySQL image
+        # Docker build for MySQL images
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile_mysql .
         # Docker push to ECR
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
