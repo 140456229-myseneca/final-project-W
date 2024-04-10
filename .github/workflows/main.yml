@@ -62,6 +62,14 @@ jobs:
           # Docker build
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY_APP:$IMAGE_TAG_APP -f Dockerfile .
           
+          # Set variables
+          export DBHOST=172.17.0.2
+          export DBPORT=3306
+          export DBUSER=root
+          export DATABASE=employees
+          export DBPWD=pw
+          export BACKGROUND_IMAGE=https://project-s3-g4.s3.amazonaws.com/PJpicture.jpg
+          
           # Unit test
           docker run -p 8080:8080 \
             -e DBHOST=$DBHOST \
