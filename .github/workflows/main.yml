@@ -81,4 +81,3 @@ jobs:
           
           # Docker push 
           docker push $ECR_REGISTRY/$ECR_REPOSITORY_APP:$IMAGE_TAG_APP
-
