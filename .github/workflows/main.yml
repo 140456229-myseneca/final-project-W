@@ -22,7 +22,7 @@ jobs:
           AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
           AWS_REGION: us-east-1
 
-      - name: Build, test, tag, and push DB image to Amazon ECR
+      - name: Build and push DB image to Amazon ECR
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY_DB: project-mysql
@@ -48,8 +48,8 @@ jobs:
       - name: Build, tag, and push app image to Amazon ECR
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: project-app
-          IMAGE_TAG: v1.2
+          ECR_REPOSITORY_APP: project-app
+          IMAGE_TAG_APP: v1.2
           DBHOST: ${{ secrets.DBHOST }}
           DBPORT: ${{ secrets.DBPORT }}
           DBUSER: ${{ secrets.DBUSER }}
@@ -58,13 +58,6 @@ jobs:
         run: |
           cd docker
           
-          # Docker build for app image
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile \
-            --build-arg DBHOST=$DBHOST \
-            --build-arg DBPORT=$DBPORT \
-            --build-arg DBUSER=$DBUSER \
-            --build-arg DBPWD=$DBPWD \
-            --build-arg BACKGROUND_IMAGE=$BACKGROUND_IMAGE .
           # Set variables
           export DBHOST=172.17.0.2
           export DBPORT=3306
@@ -73,8 +66,16 @@ jobs:
           export DBPWD=pw
           export BACKGROUND_IMAGE=https://project-s3-g4.s3.amazonaws.com/PJpicture.jpg
           
+          # Docker build for app image
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY_APP:$IMAGE_TAG_APP -f Dockerfile \
+            --build-arg DBHOST=$DBHOST \
+            --build-arg DBPORT=$DBPORT \
+            --build-arg DBUSER=$DBUSER \
+            --build-arg DBPWD=$DBPWD \
+            --build-arg BACKGROUND_IMAGE=$BACKGROUND_IMAGE .
+          
           # Unit test
-          docker run -p 8080:8080 -e DBHOST=$DBHOST -e DBPORT=$DBPORT -e DBUSER=$DBUSER -e DBPWD=$DBPWD -e BACKGROUND_IMAGE='https://project-s3-g4.s3.amazonaws.com/PJpicture.jpg' my_app
+          docker run -p 8080:8080 -e DBHOST=$DBHOST -e DBPORT=$DBPORT -e DBUSER=$DBUSER -e DBPWD=$DBPWD -e BACKGROUND_IMAGE='https://project-s3-g4.s3.amazonaws.com/PJpicture.jpg' $ECR_REGISTRY/$ECR_REPOSITORY_APP:$IMAGE_TAG_APP
           
           docker ps
           
@@ -84,4 +85,4 @@ jobs:
           curl localhost:8080
           
           # Docker push 
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY_APP:$IMAGE_TAG_APP
