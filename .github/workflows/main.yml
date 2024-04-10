@@ -57,13 +57,6 @@ jobs:
           BACKGROUND_IMAGE: 'https://project-s3-g4.s3.amazonaws.com/PJpicture.jpg'
         run: |
           cd docker
-          # Set variables
-          export DBHOST=172.17.0.2
-          export DBPORT=3306
-          export DBUSER=root
-          export DATABASE=employees
-          export DBPWD=pw
-          export BACKGROUND_IMAGE=https://project-s3-g4.s3.amazonaws.com/PJpicture.jpg
           
           # Docker build for app image
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile \
@@ -72,6 +65,13 @@ jobs:
             --build-arg DBUSER=$DBUSER \
             --build-arg DBPWD=$DBPWD \
             --build-arg BACKGROUND_IMAGE=$BACKGROUND_IMAGE .
+          # Set variables
+          export DBHOST=172.17.0.2
+          export DBPORT=3306
+          export DBUSER=root
+          export DATABASE=employees
+          export DBPWD=pw
+          export BACKGROUND_IMAGE=https://project-s3-g4.s3.amazonaws.com/PJpicture.jpg
           
           # Unit test
           docker run -p 8080:8080 -e DBHOST=$DBHOST -e DBPORT=$DBPORT -e DBUSER=$DBUSER -e DBPWD=$DBPWD -e BACKGROUND_IMAGE='https://project-s3-g4.s3.amazonaws.com/PJpicture.jpg' my_app
