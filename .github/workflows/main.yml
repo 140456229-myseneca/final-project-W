@@ -82,7 +82,7 @@ jobs:
           echo "Pause for 10 seconds to let container start"
           sleep 10
           
-          curl localhost:8080
+          curl localhost:81
           
           # Docker push 
           docker push $ECR_REGISTRY/$ECR_REPOSITORY_APP:$IMAGE_TAG_APP
