@@ -79,7 +79,7 @@ jobs:
           
       - name: Run Docker container
         run: |
-          docker run -d -p 8080:81 --name app $ECR_REGISTRY/$ECR_REPOSITORY_APP:$IMAGE_TAG_APP
+          docker run -d -p 8080:8080 --name app $ECR_REGISTRY/$ECR_REPOSITORY_APP:$IMAGE_TAG_APP
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY_APP: project-app
