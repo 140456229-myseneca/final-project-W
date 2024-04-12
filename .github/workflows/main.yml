@@ -94,7 +94,7 @@ jobs:
         id: check_health
         run: |
           echo "Waiting for the app to be ready..."
-          sleep 10  # Adjust this based on the expected startup time of your application
+          sleep 20  # Adjust this based on the expected startup time of your application
           STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/)
           echo "App responded with status code: $STATUS_CODE"
           if [ "$STATUS_CODE" -eq 200 ]; then
