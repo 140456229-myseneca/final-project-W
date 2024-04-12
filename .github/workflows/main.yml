@@ -79,7 +79,7 @@ jobs:
           
       - name: Run Docker container
         run: |
-          docker run -p 8080:8080 -e DBHOST=$DBHOST -e DBPORT=$DBPORT -e DBUSER=$DBUSER -e DBPWD=$DBPWD -e BACKGROUND_IMAGE='https://project-s3-g4.s3.amazonaws.com/PJpicture.jpg' $ECR_REGISTRY/$ECR_REPOSITORY_APP:$IMAGE_TAG_APP
+          docker run -d -p 8080:8080 -e DBHOST=$DBHOST -e DBPORT=$DBPORT -e DBUSER=$DBUSER -e DBPWD=$DBPWD -e BACKGROUND_IMAGE='https://project-s3-g4.s3.amazonaws.com/PJpicture.jpg' $ECR_REGISTRY/$ECR_REPOSITORY_APP:$IMAGE_TAG_APP
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY_APP: project-app
