@@ -34,9 +34,9 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY_DB:$IMAGE_TAG_DB -f Dockerfile_mysql . 
           
           # Unit test
-          docker run -d --name mysql -e MYSQL_ROOT_PASSWORD=pw $ECR_REGISTRY/$ECR_REPOSITORY_DB:$IMAGE_TAG_DB
+          docker run -d --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=pw $ECR_REGISTRY/$ECR_REPOSITORY_DB:$IMAGE_TAG_DB
           docker ps
-          
+          docker inspect mysql | grep -i ip
           echo "Pause for 10 seconds to let container start"
           sleep 10
           
@@ -50,10 +50,10 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY_APP: project-app
           IMAGE_TAG_APP: v3.0
-          DBHOST: ${{ secrets.DBHOST }}
-          DBPORT: ${{ secrets.DBPORT }}
-          DBUSER: ${{ secrets.DBUSER }}
-          DBPWD: ${{ secrets.DBPWD }}
+          # DBHOST: ${{ secrets.DBHOST }}
+          # DBPORT: ${{ secrets.DBPORT }}
+          # DBUSER: ${{ secrets.DBUSER }}
+          # DBPWD: ${{ secrets.DBPWD }}
           BACKGROUND_IMAGE: 'https://project-s3-g4.s3.amazonaws.com/PJpicture.jpg'
         run: |
           cd docker
